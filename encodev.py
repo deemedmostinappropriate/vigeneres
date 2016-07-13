@@ -2,7 +2,16 @@ import string
 
 
 def encodev(t, k):
+    """
+    A Cipher function that takes a message and encodes it based on a given key.
+    It will shift the alphabet of each character in the message based on the next character
+    in the key eg:
 
+    Message: hello world! | Static key: weld
+    Key:     weldw eldwe
+    Encoded: diwok azuhh!
+
+    """
     text = str(t.lower())
     # Convert key to a list of unique sub-keys:
     key = uniqify(k.lower())
@@ -67,7 +76,9 @@ def uniqify(unchkd):
 
 def evaluate():
     """
-
+    A debugging function to check if theres any deviation between the encodev function and
+    a previously evaluated encoding. This uses a phrase that contains all letters of the
+    alphabet.
     """
     text = 'The quick brown fox jumps over the lazy dog.'
     key = 'doggone'
