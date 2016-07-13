@@ -1,9 +1,9 @@
 import string
-
+import sys
 
 def encodev(t, k):
     """
-    A Cipher function that takes a message and encodes it based on a given key.
+    A Cypher function that takes a message and encodes it based on a given key.
     It will shift the alphabet of each character in the message based on the next character
     in the key eg:
 
@@ -86,7 +86,7 @@ def evaluate():
     # From http://planetcalc.com/2468/:
     expected = 'wvk dylqq ovrkt ssa xaztv cbrv wvk yecm jbk.'
 
-    # Run the cipher:
+    # Run the cypher:
     result = encodev(text,key)
 
     # Check the result against the expected encoded message:
@@ -105,5 +105,13 @@ def evaluate():
 
 if __name__ == '__main__':
     if sys.argv[1] == 'encode':
+        # Check if the key contains non-alpha characters:
+        for c in sys.argv[3]:
+            if c not in list(string.ascii_letters):
+                print('Key can only contain alphabetic characters.')
+                sys.exit()
+
+        # Otherwise, run the cypher:
         coded = encodev(sys.argv[2], sys.argv[3])
         print(coded)
+        sys.exit()
