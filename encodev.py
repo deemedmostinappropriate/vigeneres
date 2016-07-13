@@ -102,3 +102,8 @@ def evaluate():
             result_number = alphabet.index(list(result)[index])
             print(str(expected_number) + ' : ' + str(result_number) + ' Difference: ' + str(expected_number - result_number))
         index += 1
+
+if __name__ == '__main__':
+    if sys.argv[1] == 'encode':
+        coded = encodev(sys.argv[2], sys.argv[3])
+        print(coded)
