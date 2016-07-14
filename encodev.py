@@ -91,17 +91,38 @@ def evaluate():
 
     # Check the result against the expected encoded message:
     alphabet = list(string.ascii_lowercase)
-
+    # The current index  for check between the  characters of
+    # the expected and resulting messages.
     index = 0
+    # If this stays at zero, print that the test was successful.
+    number_of_errors = 0
 
-    assert expected == result
-
+    # Check each letter in the expected message against its corresponding
+    # letter in the result.
     for e in list(expected):
         if e in alphabet:
+            # Get the value of the current characters based on its order in
+            # the alphabet.
             expected_number = alphabet.index(e)
             result_number = alphabet.index(list(result)[index])
-            print(str(expected_number) + ' : ' + str(result_number) + ' Difference: ' + str(expected_number - result_number))
+
+            # Calculate the difference:
+            difference = expected_number - result_number
+
+            # Print only if theres an error:
+            if difference != 0:
+                number_of_errors += 1
+                # Print a header before any of the errors, if at least one exists.
+                if number_of_errors == 1:
+                    print('Errors: ')
+                #... then print the difference of the characters' values.
+                print('    ' + e + ' : ' + list(result)[index] + ' Difference in Position: ' + str(difference))
+        # Check the next corresponding character.
         index += 1
+
+    # Print success if there were no errors
+    if number_of_errors == 0:
+        print('Cypher encodes as expected.')
 
 if __name__ == '__main__':
     if sys.argv[1] == 'encode':
@@ -114,4 +135,7 @@ if __name__ == '__main__':
         # Otherwise, run the cypher:
         coded = encodev(sys.argv[2], sys.argv[3])
         print(coded)
+        sys.exit()
+    elif sys.argv[1] == 'test':
+        evaluate()
         sys.exit()
