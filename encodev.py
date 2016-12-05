@@ -1,5 +1,6 @@
 import string
 import sys
+import vigtools
 
 def encodev(t, k):
     """
@@ -12,9 +13,9 @@ def encodev(t, k):
     Encoded: diwok azuhh!
 
     """
-    text = str(t.lower())
+    msg = str(t.lower())
     # Convert key to a list of unique sub-keys:
-    key = uniqify(k.lower())
+    key = vigtools.uniqify(k.lower())
 
     # Holds the index of the current sub-key.
     key_index = 0
@@ -25,7 +26,7 @@ def encodev(t, k):
     # Append each encoded character here:
     encoded = ''
 
-    for char in text:
+    for char in msg:
         # Negative 1 always represents a non-alpha char.
         num = -1
         # Get the value of the current character based on its order in the alphabet.
@@ -56,23 +57,6 @@ def encodev(t, k):
 
     # Finally, return the encoded result:
     return encoded
-
-
-def uniqify(unchkd):
-    """
-    Converts a string, presented as a list, to a list with one of each of its characters,
-    while preserving its original order. Essentially ensures the key has no double-ups,
-    thereby lessening the chance of patterns appearing in the encoded message.
-
-    :param unchkd:
-    :return:
-    """
-    chkd = []
-    for char in list(unchkd):
-        if char not in chkd:
-            chkd.append(char)
-    return chkd
-
 
 def evaluate():
     """
