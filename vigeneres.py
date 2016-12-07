@@ -2,7 +2,7 @@ import string
 import sys
 import vigtools
 
-def encodev(t, k):
+def vigere(t, k, is_encode):
     """
     A Cypher function that takes a message and encodes it based on a given key.
     It will shift the alphabet of each character in the message based on the next character
@@ -71,7 +71,7 @@ def evaluate():
     expected = 'wvk dylqq ovrkt ssa xaztv cbrv wvk yecm jbk.'
 
     # Run the cypher:
-    result = encodev(text,key)
+    result = vigere(text, key, True)
 
     # Check the result against the expected encoded message:
     alphabet = list(string.ascii_lowercase)
@@ -117,7 +117,18 @@ if __name__ == '__main__':
                 sys.exit()
 
         # Otherwise, run the cypher:
-        coded = encodev(sys.argv[2], sys.argv[3])
+        coded = vigere(sys.argv[2], sys.argv[3], True)
+        print(coded)
+        sys.exit()
+    elif sys.argv[1] == 'decode':
+        # Check if the key contains non-alpha characters:
+        for c in sys.argv[3]:
+            if c not in list(string.ascii_letters):
+                print('Key can only contain alphabetic characters.')
+                sys.exit()
+
+        # Otherwise, run the cypher:
+        coded = vigere(sys.argv[2], sys.argv[3], True)
         print(coded)
         sys.exit()
     elif sys.argv[1] == 'test':
