@@ -13,6 +13,11 @@ def vigere(t, k, is_encode):
     Encoded: diwok azuhh!
 
     """
+    # Safety check arguments:
+    chk_args = vigtools.checkargs(t, k)
+    if chk_args != 0:
+        sys.exit()
+
     msg = str(t.lower())
     # Convert key to a list of unique sub-keys:
     key = vigtools.uniqify(k.lower())
@@ -24,30 +29,46 @@ def vigere(t, k, is_encode):
     alphabet = list(string.ascii_lowercase)
 
     # Append each encoded character here:
-    encoded = ''
+    result = ''
 
     for char in msg:
         # Negative 1 always represents a non-alpha char.
         num = -1
         # Get the value of the current character based on its order in the alphabet.
-        if char in string.ascii_lowercase:
+        try:
             num = alphabet.index(char)
+        except ValueError:
+            num = -1
 
         # Get the amount of places to shift by when encoding, based on the current sub-key.
         total_shift = 0
-        if char in string.ascii_lowercase:
-            total_shift = num + alphabet.index(key[key_index])
 
-        # If the shifted value is outside the alphabet range, overflow to the beginning:
-        if total_shift > 25:
-            total_shift -= 26
+        # If the user has asked to encode text:
+        if is_encode:
+            # Find the positive shift of the alphabet character:
+            if char in string.ascii_lowercase:
+                total_shift = num + alphabet.index(key[key_index])
+
+            # If the shifted value is outside the alphabet range, overflow to the beginning:
+            if total_shift > 25:
+                total_shift -= 26
+
+        # Otherwise the user has asked for decoding:
+        else:
+            # Find the negative shift of the alphabet character:
+            if char in string.ascii_lowercase:
+                total_shift = num - alphabet.index(key[key_index])
+
+            # If the shifted value is outside the alphabet range, overflow to the end:
+            if total_shift < 0:
+                total_shift += 26
 
         # Add the current char if its not in the alphabet...
         if num == -1:
-            encoded = encoded + char
-        # ...or the encoded char if it is.
+            result = result + char
+        # ...or the encoded/decoded char if it is.
         else:
-            encoded = encoded + alphabet[total_shift]
+            result = result + alphabet[total_shift]
 
         # Increment the counter of the index of a sub-key, unless it is the last sub-key.
         if key_index == len(key)-1:
@@ -56,7 +77,7 @@ def vigere(t, k, is_encode):
             key_index += 1
 
     # Finally, return the encoded result:
-    return encoded
+    return result
 
 def evaluate():
     """
@@ -99,13 +120,14 @@ def evaluate():
                 # Print a header before any of the errors, if at least one exists.
                 if number_of_errors == 1:
                     print('Errors: ')
-                #... then print the difference of the characters' values.
-                print('    ' + e + ' : ' + list(result)[index] + ' Difference in Position: ' + str(difference))
+                    #... then print the difference of the characters' values.
+                    print('    ' + e + ' : ' + list(result)[index] + ' Difference in Position: ' + str(difference))
         # Check the next corresponding character.
         index += 1
 
     # Print success if there were no errors
     if number_of_errors == 0:
+        print('Expected: ' + expected + '\nResult: ' + result)
         print('Cypher encodes as expected.')
 
 if __name__ == '__main__':
@@ -116,7 +138,7 @@ if __name__ == '__main__':
                 print('Key can only contain alphabetic characters.')
                 sys.exit()
 
-        # Otherwise, run the cypher:
+        # Otherwise, run the cypher encoder:
         coded = vigere(sys.argv[2], sys.argv[3], True)
         print(coded)
         sys.exit()
@@ -127,10 +149,17 @@ if __name__ == '__main__':
                 print('Key can only contain alphabetic characters.')
                 sys.exit()
 
-        # Otherwise, run the cypher:
-        coded = vigere(sys.argv[2], sys.argv[3], True)
+        # Otherwise, run the cypher decoder:
+        coded = vigere(sys.argv[2], sys.argv[3], False)
         print(coded)
         sys.exit()
     elif sys.argv[1] == 'test':
         evaluate()
         sys.exit()
+    else:
+        print(""" Useage:\n
+        vigeners.py encode <message> <key>\n
+                    decode <encodedmsg> <key>\n
+                    test\n
+        \n
+        """)
